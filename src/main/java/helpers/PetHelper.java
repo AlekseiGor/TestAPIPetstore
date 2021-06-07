@@ -5,9 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import endpoints.Endpoints;
 import endpoints.models.Category;
 import endpoints.models.Pet;
+import endpoints.models.Tag;
 import endpoints.models.enums.PetStatus;
 import io.restassured.RestAssured;
 import utils.RandomValue;
+
+import java.lang.reflect.Array;
 
 public class PetHelper{
 
@@ -26,7 +29,8 @@ public class PetHelper{
     public String createPetJson(String name, String status) {
         var result = "";
         var pet = new Pet()
-                .setCategory(new Category())
+                .setCategory(new Category(0L, "45"))
+                .setTags(new Tag[1])
                 .setPhotoUrls(new String[2])
                 .setName(name)
                 .setStatus(status);

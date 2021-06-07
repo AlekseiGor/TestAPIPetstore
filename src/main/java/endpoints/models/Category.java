@@ -2,14 +2,19 @@ package endpoints.models;
 
 public class Category {
 
-    private Integer id;
+    private Long id;
     private String name;
 
-    public Integer getId() {
+    public Category(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public Category setId(Integer id) {
+    public Category setId(Long id) {
         this.id = id;
         return this;
     }

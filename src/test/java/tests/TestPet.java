@@ -1,6 +1,7 @@
 package tests;
 
 import endpoints.Endpoints;
+import endpoints.models.Pet;
 import endpoints.models.enums.PetStatus;
 import helpers.BaseMethods;
 import helpers.PetHelper;
@@ -24,12 +25,26 @@ public class TestPet extends BaseMethods {
     public void addPet(){
         final String name = randomValue.getString(8);
         given().spec(getBaseSpecification())
+                .body(petHelper.createPetJson(name, PetStatus.AVAILABLE.getStatus()))
                 .when()
-                    .body(petHelper.createPetJson(name, PetStatus.AVAILABLE.getStatus()))
                     .post(Endpoints.Pet.ADD_PUT)
-                .then().log().all()
+                .then()
                     .statusCode(HttpStatus.SC_OK)
                     .body("name", equalTo(name));
+    }
+
+    @Test
+    @DisplayName("Get pet by Id")
+    public void getPetById() {
+        var randomPetId = petHelper.generatePetAndGetId();
+        given().spec(getBaseSpecification())
+                .when()
+                    .get(Endpoints.Pet.FIND_UPDATE_DELETE + randomPetId)
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .body("id", equalTo(randomPetId))
+                    .body(equalToObject(Pet.class));//need to check
+
     }
 
     @ParameterizedTest

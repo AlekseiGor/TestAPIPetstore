@@ -2,7 +2,7 @@ package endpoints.models;
 
 public class Pet {
 
-    private Integer id;
+    private Long id;
     private Category category;
     private String name;
     private String[] photoUrls;
@@ -10,11 +10,11 @@ public class Pet {
     private String status;
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public Pet setId(Integer id) {
+    public Pet setId(Long id) {
         this.id = id;
         return this;
     }
