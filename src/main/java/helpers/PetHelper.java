@@ -17,19 +17,20 @@ public class PetHelper{
     BaseMethods baseMethods = new BaseMethods();
     RandomValue randomValue = new RandomValue();
 
-    public Long generatePetAndGetId() {
+    public String generatePetAndGetId() {
         return RestAssured.given().spec(baseMethods.getBaseSpecification())
                 .body(createPetJson(randomValue.getString(8), PetStatus.AVAILABLE.getStatus()))
                 .post(Endpoints.Pet.ADD_PUT)
                 .then()
                 .extract()
-                .path("id");
+                .path("id")
+                .toString();
     }
 
     public String createPetJson(String name, String status) {
         var result = "";
         var pet = new Pet()
-                .setCategory(new Category(0L, "45"))
+                .setCategory(new Category())
                 .setTags(new Tag[1])
                 .setPhotoUrls(new String[2])
                 .setName(name)

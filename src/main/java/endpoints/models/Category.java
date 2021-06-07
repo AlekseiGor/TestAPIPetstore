@@ -10,6 +10,9 @@ public class Category {
         this.name = name;
     }
 
+    public Category() {
+    }
+
     public Long getId() {
         return id;
     }

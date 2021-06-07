@@ -42,8 +42,64 @@ public class TestPet extends BaseMethods {
                     .get(Endpoints.Pet.FIND_UPDATE_DELETE + randomPetId)
                 .then()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("id", equalTo(randomPetId))
-                    .body(equalToObject(Pet.class));//need to check
+                    .body("id", equalTo(randomPetId));
+
+    }
+
+    @Test
+    @DisplayName("Get pet by wrong Id")
+    public void getPetByWrongId() {
+        given().spec(getBaseSpecification())
+                .when()
+                    .get(Endpoints.Pet.FIND_UPDATE_DELETE + 0)
+                .then()
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
+
+    }
+
+    @Test
+    @DisplayName("Get pet by invalid Id")
+    public void getPetByInvalidId() {
+        var invalidId = randomValue.getString(8);
+        given().spec(getBaseSpecification())
+                .when()
+                    .get(Endpoints.Pet.FIND_UPDATE_DELETE + invalidId)
+                .then()
+                    .statusCode(HttpStatus.SC_BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("Delete pet by Id")
+    public void deletePetById() {
+        var randomPetId = petHelper.generatePetAndGetId();
+        given().spec(getBaseSpecification())
+                .when()
+                    .delete(Endpoints.Pet.FIND_UPDATE_DELETE + randomPetId)
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .body("message", equalTo(randomPetId));
+    }
+
+    @Test
+    @DisplayName("Delete pet by wrong Id")
+    public void deletePetByWrongId() {
+        given().spec(getBaseSpecification())
+                .when()
+                    .delete(Endpoints.Pet.FIND_UPDATE_DELETE + 0)
+                .then()
+                    .statusCode(HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test
+    @DisplayName("Delete pet by invalid Id")
+    public void deletePetByInvalidId() {
+        var invalidId = randomValue.getString(8);
+        given().spec(getBaseSpecification())
+                .when()
+                    .delete(Endpoints.Pet.FIND_UPDATE_DELETE + invalidId)
+                .then()
+                    .statusCode(HttpStatus.SC_BAD_REQUEST);
 
     }
 
