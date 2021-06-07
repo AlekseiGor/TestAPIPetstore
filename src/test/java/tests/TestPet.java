@@ -23,7 +23,7 @@ public class TestPet extends BaseMethods {
     @Test
     @DisplayName("Add a new pet")
     public void addPet(){
-        final String name = randomValue.getString(8);
+        var name = randomValue.getString(8);
         given().spec(getBaseSpecification())
                 .body(petHelper.createPetJson(name, PetStatus.AVAILABLE.getStatus()))
                 .when()
@@ -78,7 +78,7 @@ public class TestPet extends BaseMethods {
                     .delete(Endpoints.Pet.FIND_UPDATE_DELETE + randomPetId)
                 .then()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("message", equalTo(randomPetId));
+                    .body("message", equalTo(randomPetId.toString()));
     }
 
     @Test
@@ -125,5 +125,29 @@ public class TestPet extends BaseMethods {
                     .get(Endpoints.Pet.FIND_BY_STATUS)
                 .then()
                     .statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("Update pet info with form")
+    public void updatePetWithForm() {
+        var randomPetId = petHelper.generatePetAndGetId();
+        var name = randomValue.getString(8);
+        given().spec(getBaseSpecification())
+                .contentType("application/x-www-form-urlencoded")
+                .param("name", name)
+                .param("status", PetStatus.SOLD.getStatus())
+                .when()
+                    .post(Endpoints.Pet.FIND_UPDATE_DELETE + randomPetId)
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .body("message", equalTo(randomPetId.toString()));
+        given().spec(getBaseSpecification())
+                .when()
+                    .get(Endpoints.Pet.FIND_UPDATE_DELETE + randomPetId)
+                .then()
+                    .statusCode(HttpStatus.SC_OK)
+                    .body("id", equalTo(randomPetId))
+                    .body("name", equalTo(name))
+                    .body("status", equalTo(PetStatus.SOLD.getStatus()));
     }
 }
