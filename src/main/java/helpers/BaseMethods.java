@@ -11,8 +11,6 @@ import java.util.Properties;
 
 public class BaseMethods {
 
-    public PetHelper petHelper = new PetHelper();
-
     public RequestSpecification getBaseSpecification() {
         return new RequestSpecBuilder()
                 .setBaseUri(getBaseUrl())

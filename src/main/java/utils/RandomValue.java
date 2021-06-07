@@ -1,12 +1,10 @@
 package utils;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 public class RandomValue {
 
     public String getString(Integer count) {
-        return "";
-    }
-
-    public Integer getInteger(Integer count) {
-        return 1;
+        return RandomStringUtils.randomAlphanumeric(count);
     }
 }

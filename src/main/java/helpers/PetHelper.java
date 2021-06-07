@@ -2,12 +2,26 @@ package helpers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import endpoints.Endpoints;
 import endpoints.models.Category;
 import endpoints.models.Pet;
+import endpoints.models.enums.PetStatus;
+import io.restassured.RestAssured;
+import utils.RandomValue;
 
-public class PetHelper {
+public class PetHelper{
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    BaseMethods baseMethods = new BaseMethods();
+    RandomValue randomValue = new RandomValue();
+
+    public Long generatePetAndGetId() {
+        return RestAssured.given().spec(baseMethods.getBaseSpecification())
+                .body(createPetJson(randomValue.getString(8), PetStatus.AVAILABLE.getStatus()))
+                .post(Endpoints.Pet.ADD_PUT)
+                .then()
+                .extract()
+                .path("id");
+    }
 
     public String createPetJson(String name, String status) {
         var result = "";
@@ -17,7 +31,7 @@ public class PetHelper {
                 .setName(name)
                 .setStatus(status);
         try {
-            result = objectMapper.writeValueAsString(pet);
+            result = new ObjectMapper().writeValueAsString(pet);
         } catch (JsonProcessingException e) {
             System.out.println("Error when generating JSON from object " + e.getMessage());
         }

@@ -3,21 +3,26 @@ package tests;
 import endpoints.Endpoints;
 import endpoints.models.enums.PetStatus;
 import helpers.BaseMethods;
+import helpers.PetHelper;
 import org.apache.http.HttpStatus;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import utils.RandomValue;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
 
 public class TestPet extends BaseMethods {
 
+    PetHelper petHelper = new PetHelper();
+    RandomValue randomValue = new RandomValue();
+
     @Test
     @DisplayName("Add a new pet")
     public void addPet(){
-        final String name = "random";
+        final String name = randomValue.getString(8);
         given().spec(getBaseSpecification())
                 .when()
                     .body(petHelper.createPetJson(name, PetStatus.AVAILABLE.getStatus()))
