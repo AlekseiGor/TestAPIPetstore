@@ -11,8 +11,6 @@ import java.util.Properties;
 
 public class BaseMethods {
 
-    private final String PATH_RESOURCES = "/src/test/resources/app.properties";
-
     public RequestSpecification getBaseSpecification() {
         return new RequestSpecBuilder()
                 .setBaseUri(getBaseUrl())
@@ -23,6 +21,7 @@ public class BaseMethods {
     }
 
     private String getBaseUrl() {
+        final String PATH_RESOURCES = "/src/test/resources/app.properties";
         Properties properties = new Properties();
         try {
             properties.load(new FileInputStream(System.getProperty("user.dir") + PATH_RESOURCES));
