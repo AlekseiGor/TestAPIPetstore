@@ -1,7 +1,9 @@
 package tests;
 
 import endpoints.Endpoints;
+import endpoints.models.Category;
 import endpoints.models.Pet;
+import endpoints.models.Tag;
 import endpoints.models.enums.PetStatus;
 import helpers.BaseMethods;
 import helpers.PetHelper;
@@ -18,19 +20,27 @@ import static org.hamcrest.Matchers.*;
 public class TestPet extends BaseMethods {
 
     PetHelper petHelper = new PetHelper();
-    RandomValue randomValue = new RandomValue();
 
     @Test
     @DisplayName("Add a new pet")
     public void addPet(){
-        var name = randomValue.getString(8);
+        var name = RandomValue.getString(8);
+        var pet = new Pet()
+                .setCategory(new Category())
+                .setTags(new Tag[1])
+                .setPhotoUrls(new String[2])
+                .setName(name)
+                .setStatus(PetStatus.AVAILABLE.getStatus());
+        var petId = petHelper.createPetAndGetId(pet);
         given().spec(getBaseSpecification())
-                .body(petHelper.createPetJson(name, PetStatus.AVAILABLE.getStatus()))
                 .when()
-                    .post(Endpoints.Pet.ADD_PUT)
+                    .get(Endpoints.Pet.FIND_UPDATE_DELETE + petId)
                 .then()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("name", equalTo(name));
+                    .body("id", equalTo(petId))
+                    .body("name", equalTo(name))
+                    .body("status", equalTo(PetStatus.AVAILABLE.getStatus()));
+
     }
 
     @Test
@@ -60,7 +70,7 @@ public class TestPet extends BaseMethods {
     @Test
     @DisplayName("Get pet by invalid Id")
     public void getPetByInvalidId() {
-        var invalidId = randomValue.getString(8);
+        var invalidId = RandomValue.getString(8);
         given().spec(getBaseSpecification())
                 .when()
                     .get(Endpoints.Pet.FIND_UPDATE_DELETE + invalidId)
@@ -94,7 +104,7 @@ public class TestPet extends BaseMethods {
     @Test
     @DisplayName("Delete pet by invalid Id")
     public void deletePetByInvalidId() {
-        var invalidId = randomValue.getString(8);
+        var invalidId = RandomValue.getString(8);
         given().spec(getBaseSpecification())
                 .when()
                     .delete(Endpoints.Pet.FIND_UPDATE_DELETE + invalidId)
@@ -113,7 +123,7 @@ public class TestPet extends BaseMethods {
                     .get(Endpoints.Pet.FIND_BY_STATUS)
                 .then()
                     .statusCode(HttpStatus.SC_OK)
-                    .body("status", hasItems(petStatus.getStatus()));
+                    .body("status", hasItem(petStatus.getStatus()));
     }
 
     @Test
@@ -131,7 +141,7 @@ public class TestPet extends BaseMethods {
     @DisplayName("Update pet info with form")
     public void updatePetWithForm() {
         var randomPetId = petHelper.generatePetAndGetId();
-        var name = randomValue.getString(8);
+        var name = RandomValue.getString(8);
         given().spec(getBaseSpecification())
                 .contentType("application/x-www-form-urlencoded")
                 .param("name", name)

@@ -1,5 +1,7 @@
 package helpers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.filter.log.LogDetail;
 import io.restassured.http.ContentType;
@@ -10,6 +12,16 @@ import java.io.IOException;
 import java.util.Properties;
 
 public class BaseMethods {
+
+    public String createJsonFromObject(Object o) {
+        var result = "";
+        try {
+            result = new ObjectMapper().writeValueAsString(o);
+        } catch (JsonProcessingException e) {
+            System.out.println("Error when generating JSON from object " + e.getMessage());
+        }
+        return result;
+    }
 
     public RequestSpecification getBaseSpecification() {
         return new RequestSpecBuilder()
